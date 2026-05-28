@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spesial Buat Kamu ❤️</title>
+    <style>
+        /* =======================================================
+           1. GAYA DASAR (Satu Laptop/HP)
+           ======================================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffeef2; /* Warna pink pastel lembut */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Kontainer Utama Slide */
+        .slide-container {
+            width: 100%;
+            max-width: 450px; /* Pas untuk layar HP */
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Gaya Umum Per Slide */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 1;
+        }
+
+        /* Menampilkan Slide yang sedang Aktif */
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        /* Tombol Lanjut Umum */
+        .btn-next {
+            background-color: transparent;
+            color: #ff6b8b;
+            border: 2px solid #ff6b8b;
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-next:hover {
+            background-color: #ff6b8b;
+            color: white;
+        }
+
+        .tap-hint {
+            font-size: 0.85rem;
+            color: #ff6b8b;
+            margin-top: 25px;
+            font-style: italic;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* =======================================================
+           2. GAYA KHUSUS SLIDE 1 (COVER)
+           ======================================================= */
+        .cover-title {
+            font-size: 2rem;
+            color: #ff6b8b;
+            margin-bottom: 10px;
+        }
+        .cover-sub {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 30px;
+        }
+        .btn-buka {
+            background-color: #ff6b8b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-buka:hover {
+            transform: scale(1.05);
+        }
+
+        /* =======================================================
+           3. GAYA KHUSUS SLIDE 2 (AMPLOP INTERAKTIF)
+           ======================================================= */
+        .envelope-wrapper {
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background-color: #f08080; /* Warna luar amplop */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            transition: transform 0.4s ease;
+        }
+
+        /* Tutup Atas Amplop */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid #f08080;
+            transform-origin: top;
+            pointer-events: none;
+            z-index: 3;
+            transition: transform 0.4s ease 0.2s, z-index 0.2s ease 0.2s;
+        }
+
+        /* Kantong Dalam Amplop */
+        .pocket {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid #f4978e;
+            border-right: 140px solid #f4978e;
+            border-bottom: 90px solid #f4978e;
+            border-top: 90px solid transparent;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* Kertas Surat di Dalam Amplop */
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 250px;
+            height: 160px;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 2;
+            transition: transform 0.6s ease 0.4s, height 0.6s ease 0.4s;
+            overflow: hidden;
+        }
+
+        .letter-title {
+            font-size: 1rem;
+            color: #ff6b8b;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .letter-text {
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: #444;
+            text-align: left;
+        }
+
+        /* Stiker Hati di Tengah */
+        .hearts {
+            position: absolute;
+            top: 90px;
+            left: 125px;
+            z-index: 5;
+            transition: opacity 0.3s ease;
+        }
+        .heart__buka {
+            font-size: 2rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- ANIMASI PAS AMPLOP DIBUKA --- */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translateY(-110px); /* Kertas meluncur naik */
+            height: 230px; /* Kertas memanjang keluar */
+            z-index: 5; /* Pindah ke paling depan */
+            overflow-y: auto;
+        }
+
+        .envelope-wrapper.open .hearts {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* =======================================================
+           4. GAYA KHUSUS SLIDE 3 (GALERI POLAROID)
+           ======================================================= */
+        .gallery-title {
+            font-size: 1.3rem;
+            color: #ff6b8b;
+            margin-bottom: 30px;
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 260px;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        .polaroid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 15px 15px 25px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.5s ease, z-index 0.5s ease, opacity 0.5s ease;
+            transform-origin: center;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .polaroid-caption {
+            font-size: 0.85rem;
+            color: #444;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Variasi rotasi tumpukan awal polaroid */
+        .polaroid:nth-child(1) { transform: rotate(-4deg); z-index: 1; }
+        .polaroid:nth-child(2) { transform: rotate(3deg); z-index: 2; }
+        .polaroid:nth-child(3) { transform: rotate(-2deg); z-index: 3; }
+
+        /* Efek ketika polaroid diklik (melayang keluar) */
+        .polaroid.fly-away {
+            transform: translateX(300px) rotate(30deg) !important;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        /* =======================================================
+           5. GAYA KHUSUS SLIDE 4 (PERTANYAAN INTERAKTIF)
+           ======================================================= */
+        .quiz-gif {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .quiz-title {
+            font-size: 1.4rem;
+            color: #ff6b8b;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+        .quiz-buttons {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .btn-quiz {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.1s;
+        }
+        .btn-yes {
+            background-color: #ff6b8b;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.4);
+        }
+        .btn-no {
+            background-color: #999;
+            color: white;
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+
+        /* =======================================================
+           6. GAYA KHUSUS SLIDE 5 (UCAPAN UTAMA & CONFETTI)
+           ======================================================= */
+        .cake-emoji {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        .hbd-title {
+            font-size: 2.2rem;
+            color: #ff6b8b;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .hbd-wish {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #555;
+            padding: 0 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .watermark {
+            margin-top: 35px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Styling Elemen Confetti Hati */
+        .confetti {
+            position: absolute;
+            top: -20px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 999;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container" id="mainContainer">
+        
+        <!-- =======================================================
+           SLIDE 1: COVER
+           ======================================================= -->
+        <div class="slide active" id="slide1">
+            <h1 class="cover-title">Halo Cantik... ✨</h1>
+            <p class="cover-sub">Ada sesuatu yang spesial buat kamu hari ini.</p>
+            <button class="btn-buka" onclick="nextSlide()">Buka Sekarang ❤️</button>
+        </div>
+
+        <!-- =======================================================
+           SLIDE 2: AMPLOP INTERAKTIF
+           ======================================================= -->
+        <div class="slide" id="slide2">
+            <div class="envelope-wrapper" onclick="openLetter()">
+                <div class="envelope">
+                    <div class="flap"></div>
+                    <div class="pocket"></div>
+                    <div class="letter">
+                        <h2 class="letter-title">Teruntuk Kamu... ❤️</h2>
+                        <p class="letter-text">
+                            Selamat bertambah usia, ya. Di hari yang spesial ini, aku cuma mau bilang terima kasih karena kamu sudah lahir ke dunia dan membawa banyak kebahagiaan di hidupku. Kamu itu hadiah terindah yang pernah aku punya. ✨
+                        </p>
+                    </div>
+                    <div class="hearts">
+                        <div class="heart__buka">❤️</div>
+                    </div>
+                </div>
+                <p class="tap-hint">Tap amplopnya untuk dibuka... ✨</p>
+            </div>
+            
+            <button class="btn-next" id="btnNext2" onclick="goToSlide3()" style="display: none; margin-top: 20px;">Lanjut, yuk! 👉</button>
+        </div>
+
+        <!-- =======================================================
+           SLIDE 3: GALERI FOTO INTERAKTIF
+           ======================================================= -->
+        <div class="slide" id="slide3">
+            <h2 class="gallery-title">Beberapa Kenangan Indah... 📸</h2>
+            
+            <div class="gallery-container">
+                <div class="polaroid" onclick="changeCard(this)">
+                    <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" alt="Foto Kenangan 3">
+                    <div class="polaroid-caption">Dan semoga kita terus begini... ❤️</div>
+                </div>
+                <div class="polaroid" onclick="changeCard(this)">
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500" alt="Foto Kenangan 2">
+                    <div class="polaroid-caption">Tertawa bareng kamu itu candu ✨</div>
+                </div>
+                <div class="polaroid" onclick="changeCard(this)">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" alt="Foto Kenangan 1">
+                    <div class="polaroid-caption">Suka banget sama senyum kamu yang ini 😍</div>
+                </div>
+            </div>
+
+            <p class="tap-hint" style="margin-top: 15px;">Tap fotonya untuk melihat yang lain...</p>
+            <button class="btn-next" onclick="goToSlide4()" style="margin-top: 25px;">Ada satu pertanyaan... 🤔</button>
+        </div>
+
+        <!-- =======================================================
+           SLIDE 4: PERTANYAAN INTERAKTIF (TOMBOL MENGHINDAR)
+           ======================================================= -->
+        <div class="slide" id="slide4">
+            <div class="quiz-gif"><span>🥺</span>👉👈</div>
+            <h2 class="quiz-title">Oiya, kalau boleh tahu... Kamu sayang gak sih sama aku?</h2>
+            
+            <div class="quiz-buttons" id="quizContainer">
+                <button class="btn-quiz btn-yes" onclick="goToSlide5()">Sayang Banget! ❤️</button>
+                <button class="btn-quiz btn-no" id="btnNo" onmouseover="avoidButton()" onclick="avoidButton()">Enggak 😜</button>
+            </div>
+        </div>
+
+        <!-- =======================================================
+           SLIDE 5: UCAPAN UTAMA (HAPPY BIRTHDAY)
+           ======================================================= -->
+        <div class="slide" id="slide5">
+            <div class="cake-emoji">🎂🎉</div>
+            <h1 class="hbd-title">Happy Birthday, Sayang! ❤️</h1>
+            <p class="hbd-wish">
+                Semoga di umur yang baru ini kamu selalu diberikan kesehatan, dilancarkan segala urusan kuliahnya, dan makin dipermudah jalan menuju impianmu. Tetap jadi orang baik dan ceria yang selalu bikin hari-hariku jadi lebih berwarna, ya. I'm so proud of you, and I love you always! ✨🥰
+            </p>
+            <p class="watermark">Made with ❤️ by Your Boy</p>
+        </div>
+
+    </div>
+
+    <!-- =======================================================
+       LOGIKA JAVASCRIPT
+       ======================================================= -->
+    <script>
+        // Pindah dari Slide 1 ke Slide 2
+        function nextSlide() {
+            document.getElementById('slide1').classList.remove('active');
+            document.getElementById('slide2').classList.add('active');
+        }
+
+        // Membuka Amplop di Slide 2
+        function openLetter() {
+            const envelope = document.querySelector('.envelope-wrapper');
+            
+            if (!envelope.classList.contains('open')) {
+                envelope.classList.add('open');
+                
+                setTimeout(() => {
+                    const btn = document.getElementById('btnNext2');
+                    btn.style.display = 'inline-block';
+                }, 1000);
+            }
+        }
+
+        // Pindah dari Slide 2 ke Slide 3
+        function goToSlide3() {
+            document.getElementById('slide2').classList.remove('active');
+            document.getElementById('slide3').classList.add('active');
+        }
+
+        // Logika Geser Foto di Slide 3
+        function changeCard(card) {
+            card.classList.add('fly-away');
+            
+            setTimeout(() => {
+                card.classList.remove('fly-away');
+                const container = document.querySelector('.gallery-container');
+                container.insertBefore(card, container.firstChild);
+                
+                const cards = container.querySelectorAll('.polaroid');
+                cards.forEach((c, index) => {
+                    c.style.zIndex = index + 1;
+                    const rotations = [-4, 3, -2];
+                    c.style.transform = `rotate(${rotations[index % 3]}deg)`;
+                });
+            }, 500);
+        }
+
+        // Pindah dari Slide 3 ke Slide 4
+        function goToSlide4() {
+            document.getElementById('slide3').classList.remove('active');
+            document.getElementById('slide4').classList.add('active');
+            
+            // Atur posisi awal tombol 'Enggak' agar pas di samping tombol 'Sayang'
+            const btnNo = document.getElementById('btnNo');
+            btnNo.style.left = 'calc(50% + 20px)';
+            btnNo.style.top = '40px';
+        }
+
+        // Logika Tombol Menghindar di Slide 4
+        function avoidButton() {
+            const btnNo = document.getElementById('btnNo');
+            const container = document.getElementById('quizContainer');
+            
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+            
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+            
+            const randomX = Math.floor(Math.random() * (containerWidth - btnWidth));
+            const randomY = Math.floor(Math.random() * (containerHeight - btnHeight));
+            
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        // Pindah dari Slide 4 ke Slide 5 (Mulai Jalankan Efek Balon Hati)
+        function goToSlide5() {
+            document.getElementById('slide4').classList.remove('active');
+            document.getElementById('slide5').classList.add('active');
+            
+            // Jalankan efek hujan confetti hati setiap 300ms
+            setInterval(createConfetti, 300);
+        }
+
+        // Logika Generator Hujan Confetti Hati
+        function createConfetti() {
+            const mainContainer = document.getElementById('mainContainer');
+            const confetti = document.createElement('div');
+            
+            confetti.classList.add('confetti');
+            confetti.innerText = '❤️'; // Bentuk confetti
+            
+            // Atur posisi horizontal acak & ukuran acak agar terlihat natural
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.fontSize = Math.random() * 15 + 10 + 'px';
+            
+            // Atur durasi jatuh acak antara 3 sampai 5 detik
+            const duration = Math.random() * 2 + 3;
+            confetti.style.animationDuration = duration + 's';
+            
+            // Tambahkan elemen ke dalam layar utama
+            mainContainer.appendChild(confetti);
+            
+            // Hapus elemen dari memori setelah dia jatuh melewati layar
+            setTimeout(() => {
+                confetti.remove();
+            }, duration * 1000);
+        }
+    </script>
+
+</body>
+</html>
